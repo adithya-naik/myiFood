@@ -1,80 +1,49 @@
 import React from "react";
+import { Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
+import { FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-800 text-gray-400 body-font">
-      <div className="container px-5 py-24 mx-auto flex md:items-center lg:items-start md:flex-row md:flex-nowrap flex-wrap flex-col">
-        <div className="w-64 flex-shrink-0 md:mx-0 mx-auto text-center md:text-left">
-          <a className="flex title-font font-medium items-center md:justify-start justify-center text-white">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              className="w-10 h-10 text-white p-2 bg-indigo-500 rounded-full"
-              viewBox="0 0 24 24"
-            >
-              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
-            </svg>
-            <span className="ml-3 text-xl">Tailblocks</span>
-          </a>
-          <p className="mt-2 text-sm text-gray-500">
-            Air plant banjo lyft occupy retro adaptogen indego
+    <footer className="bg-gray-900 text-gray-400 body-font">
+      <div className="container px-6 py-12 mx-auto flex flex-wrap md:justify-between lg:justify-start">
+        <div className="w-full md:w-1/3 lg:w-1/4 text-center md:text-left mb-6 md:mb-0">
+          <h2 className="text-white text-2xl font-bold">MyiStay Restaurant</h2>
+          <p className="mt-3 text-sm text-gray-500">
+            Experience the finest dining with a blend of traditional and modern cuisine.
           </p>
         </div>
-        <div className="flex-grow flex flex-wrap md:pl-20 -mb-10 md:mt-0 mt-10 md:text-left text-center">
-          {[...Array(4)].map((_, index) => (
-            <div key={index} className="lg:w-1/4 md:w-1/2 w-full px-4">
-              <h2 className="title-font font-medium text-white tracking-widest text-sm mb-3">
-                CATEGORIES
-              </h2>
-              <nav className="list-none mb-10">
-                <li>
-                  <a className="text-gray-400 hover:text-white">First Link</a>
-                </li>
-                <li>
-                  <a className="text-gray-400 hover:text-white">Second Link</a>
-                </li>
-                <li>
-                  <a className="text-gray-400 hover:text-white">Third Link</a>
-                </li>
-                <li>
-                  <a className="text-gray-400 hover:text-white">Fourth Link</a>
-                </li>
-              </nav>
-            </div>
-          ))}
+        <div className="w-full md:w-1/3 lg:w-1/4 mb-6 md:mb-0">
+          <h2 className="title-font font-medium text-white tracking-widest text-lg mb-4">Quick Links</h2>
+          <nav className="list-none">
+            <li><a className="text-gray-400 hover:text-white block mb-2">Home</a></li>
+            <li><a className="text-gray-400 hover:text-white block mb-2">Menu</a></li>
+            <li><a className="text-gray-400 hover:text-white block mb-2">Reservations</a></li>
+            <li><a className="text-gray-400 hover:text-white block">Contact</a></li>
+          </nav>
+        </div>
+        <div className="w-full md:w-1/3 lg:w-1/4">
+          <h2 className="title-font font-medium text-white tracking-widest text-lg mb-4">Contact Us</h2>
+          <p className="text-gray-500 text-sm flex items-center mb-2">
+            <FaMapMarkerAlt className="mr-2 text-lg" /> 123, Gourmet Street, New Delhi, India
+          </p>
+          <p className="text-gray-500 text-sm flex items-center mb-2">
+            <FaPhone className="mr-2 text-lg" /> +91 98765 43210
+          </p>
+          <p className="text-gray-500 text-sm flex items-center">
+            <FaEnvelope className="mr-2 text-lg" /> support@myistay.com
+          </p>
         </div>
       </div>
-      <div className="bg-gray-900">
-        <div className="container mx-auto py-4 px-5 flex flex-wrap flex-col sm:flex-row">
+      <div className="bg-gray-800 mt-6">
+        <div className="container mx-auto py-4 px-6 flex flex-wrap flex-col sm:flex-row justify-between items-center">
           <p className="text-gray-500 text-sm text-center sm:text-left">
-            © 2025 Tailblocks —
-            <a
-              href="https://twitter.com/knyttneve"
-              rel="noopener noreferrer"
-              className="text-gray-400 ml-1 hover:text-white"
-              target="_blank"
-            >
-              @knyttneve
-            </a>
+            © 2025 MyiStay Restaurant — All Rights Reserved
           </p>
-          <span className="inline-flex sm:ml-auto sm:mt-0 mt-2 justify-center sm:justify-start">
-            {["facebook", "twitter", "instagram", "linkedin"].map(
-              (platform, index) => (
-                <a key={index} className="ml-3 text-gray-400 hover:text-white">
-                  <svg
-                    fill="currentColor"
-                    className="w-5 h-5"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"></path>
-                  </svg>
-                </a>
-              )
-            )}
+          <span className="inline-flex mt-2 sm:mt-0">
+            <a className="ml-3 text-gray-400 hover:text-white"><Facebook className="w-6 h-6" /></a>
+            <a className="ml-3 text-gray-400 hover:text-white"><Twitter className="w-6 h-6" /></a>
+            <a className="ml-3 text-gray-400 hover:text-white"><Instagram className="w-6 h-6" /></a>
+            <a className="ml-3 text-gray-400 hover:text-white"><Linkedin className="w-6 h-6" /></a>
           </span>
         </div>
       </div>

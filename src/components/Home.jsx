@@ -1,13 +1,20 @@
 import React from "react";
 import Navbar from "./Navbar";
+import Carousel from "./Carousel";
 import Footer from "./Footer";
-
+import FoodCard from "./FoodCard";
 const Home = () => {
   return (
     <>
       <Navbar />
-      <h1>Its the Body Content Goes here ... </h1>
-      <Footer/>
+      <Carousel/>
+      <div>
+        <FoodCard/>
+        <FoodCard/>
+        <FoodCard/>
+      </div>
+
+      <Footer />
     </>
   );
 };
