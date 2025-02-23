@@ -1,26 +1,83 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const User = require('../models/User');
+const User = require("../models/User");
+const { body, validationResult } = require("express-validator");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const jwtSecret = "mysecrettokenidbdatbase";
 
-router.post('/createUser',async  (req, res) => {
-  try{
-     await User.create({
-      // name : "Adithya",
-      // email : "adithya@hotmail.com",
-      // password : "adithya123",
-      // location : "Bangalore"
-      name : req.body.name, 
-      email : req.body.email,
-      password : req.body.password,
-      location : req.body.location
-     })
+// Create User (New User creating a new account)
+router.post(
+  "/createUser",
+  body("email", "Email is Not Valid").isEmail(),
+  body("password", "Password should be minimum 5 Chars").isLength({ min: 5 }),
+  body("name", "Name should be minimum 3 Chars").isLength({ min: 3 }),
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+const salt = await bcrypt.genSalt(10);
+const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
-     res.json({message : "User created successfully"});
+    try {
+      await User.create({
+        name: req.body.name,
+        email: req.body.email,
+        password: hashedPassword ,
+        location: req.body.location,
+      });
+
+      res.json({ success: true });
+    } catch {
+      console.log("Error in creating user");
+      res.json({ success: false });
+    }
   }
-  catch{
-    console.log("Error in creating user");
-    res.json({message : "User creation failed"});
+);
+
+
+
+
+
+
+// Existing User (Loging into his account)
+router.post(
+  "/loginUser",
+  body("email", "Email is Not Valid").isEmail(),
+  body("password", "Password should be minimum 5 Chars").isLength({ min: 5 }),
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    try {
+      const email = req.body.email;
+      let userData = await User.findOne({email});
+      if(!userData){
+        return res.status(400).json({ errors: "Try logging using Valid Credentials" });
+      }
+      const validPassword = await bcrypt.compare(req.body.password, userData.password);
+      if(!validPassword){
+        return res.status(400).json({ errors: "Try logging using Valid Credentials" });
+      }
+
+      const data = {
+        user: {
+          id: userData.id,
+        },
+      };
+      const authToken = jwt.sign(data, jwtSecret);
+      res.json({ success: true ,authToken:authToken});
+
+    } catch {
+      console.log("Error in Logging into account");
+      res.json({ success: false });
+    }
   }
-});
+);
+
+
 
 module.exports = router;

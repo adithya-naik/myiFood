@@ -1,4 +1,9 @@
 const mongoose = require('mongoose');
+
+
+// actually that should be myiFood
+
+
 const mongoURI = 'mongodb://localhost:27017/myistay';
 
 const mongoDB = async () => {
