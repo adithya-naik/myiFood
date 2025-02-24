@@ -1,44 +1,124 @@
-import React, { useState } from "react";
-import { FaPizzaSlice, FaSortNumericUp, FaRupeeSign } from "react-icons/fa";
+import React, { useState, useEffect } from "react";
+import { FaPizzaSlice, FaSortNumericUp, FaRupeeSign, FaShoppingCart } from "react-icons/fa";
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
-const FoodCard = () => {
-  const foodItem = {
-    image: "https://images.pexels.com/photos/825661/pexels-photo-825661.jpeg",
-    name: "Delicious Pizza 🍕",
-    description: "Cheesy and mouth-watering pizza with fresh toppings.",
-    prices: { half: 150, full: 250 },
+const FoodCard = ({ foodItem }) => {
+  const quantities = [1, 2, 3, 4, 5];
+  const [quantity, setQuantity] = useState(1);
+  const [size, setSize] = useState(() => {
+    if (foodItem.options?.[0]?.half) return 'half';
+    if (foodItem.options?.[0]?.regular) return 'regular';
+    return '';
+  });
+  const [isHovered, setIsHovered] = useState(false);
+
+  // Initialize AOS
+  useEffect(() => {
+    AOS.init({
+      duration: 1000,
+      once: true,
+      easing: 'ease-out-cubic'
+    });
+  }, []);
+
+  const hasHalfFullOptions = foodItem.options?.[0]?.half || foodItem.options?.[0]?.full;
+  const hasPizzaSizes = foodItem.options?.[0]?.regular || foodItem.options?.[0]?.medium || foodItem.options?.[0]?.large;
+
+  const calculatePrice = () => {
+    if (!foodItem.options?.[0]) {
+      return (foodItem.price || 0) * quantity;
+    }
+    const basePrice = foodItem.options[0][size] || 0;
+    return Number(basePrice) * quantity;
   };
 
-  const quantities = [1, 2, 3, 4, 5];
-  const sizes = [
-    { value: "half", label: `Half - ₹${foodItem.prices.half}` },
-    { value: "full", label: `Full - ₹${foodItem.prices.full}` },
-  ];
-
-  const [quantity, setQuantity] = useState(1);
-  const [size, setSize] = useState("half");
-
-  const totalPrice = foodItem.prices[size] * quantity;
-
   return (
-    <div className="bg-white text-gray-800 rounded-xl shadow-lg p-4 m-3 w-full max-w-sm border border-gray-200 hover:shadow-xl transition duration-300">
-      <div className="relative h-44 rounded-lg overflow-hidden">
-        <img className="object-cover w-full h-full" src={foodItem.image} alt={foodItem.name} />
+    <div 
+      data-aos="fade-up"
+      data-aos-duration="800"
+      data-aos-delay="100"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className="bg-white mx-auto text-gray-800 rounded-xl shadow-lg p-4 m-3 w-full max-w-sm border border-gray-200 
+                 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 ease-in-out"
+    >
+      <div className="relative h-48 rounded-lg overflow-hidden group">
+        <img 
+          className={`object-cover w-full h-full transition-all duration-700 ease-in-out ${
+            isHovered ? 'scale-110 filter brightness-90' : ''
+          }`}
+          src={foodItem.img} 
+          alt={foodItem.name} 
+        />
+        <div className={`absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center transition-all duration-300 ${
+          isHovered ? 'opacity-100' : 'opacity-0'
+        }`}>
+          <span className="text-white text-lg font-semibold px-4 py-2 rounded-full bg-black bg-opacity-50 transform transition-all duration-300">
+            {foodItem.CategoryName}
+          </span>
+        </div>
       </div>
 
-      <div className="mt-3">
-        <h3 className="text-gray-500 text-sm tracking-widest">CATEGORY</h3>
-        <h2 className="text-gray-900 text-base font-semibold">{foodItem.name}</h2>
-        <p className="mt-1 text-gray-600 text-sm">{foodItem.description}</p>
+      <div className="mt-4 space-y-4">
+        <div className="space-y-2">
+          <h2 className="text-gray-900 text-xl font-semibold transform transition-all duration-300 hover:text-green-600">
+            {foodItem.name}
+          </h2>
+          <p className="text-gray-600 text-sm line-clamp-2 hover:line-clamp-none transition-all duration-300">
+            {foodItem.description}
+          </p>
+        </div>
 
-        <div className="mt-3 flex items-center justify-between bg-gray-100 p-2 rounded-md">
+        {(hasHalfFullOptions || hasPizzaSizes) && (
+          <div className="flex items-center justify-between bg-gray-50 p-3 rounded-lg border border-gray-100 hover:border-green-200 transition-colors duration-300">
+            <label className="text-gray-700 text-sm font-medium flex items-center">
+              <FaPizzaSlice className={`mr-2 transition-colors duration-300 ${isHovered ? 'text-green-500' : 'text-gray-400'}`} /> 
+              Size:
+            </label>
+            <select
+              value={size}
+              onChange={(e) => setSize(e.target.value)}
+              className="bg-white text-gray-800 p-2 rounded-md border border-gray-200 shadow-sm cursor-pointer text-sm
+                         focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300"
+            >
+              {hasHalfFullOptions && (
+                <>
+                  {foodItem.options[0].half && (
+                    <option value="half">Half (₹{foodItem.options[0].half})</option>
+                  )}
+                  {foodItem.options[0].full && (
+                    <option value="full">Full (₹{foodItem.options[0].full})</option>
+                  )}
+                </>
+              )}
+              {hasPizzaSizes && (
+                <>
+                  {foodItem.options[0].regular && (
+                    <option value="regular">Regular (₹{foodItem.options[0].regular})</option>
+                  )}
+                  {foodItem.options[0].medium && (
+                    <option value="medium">Medium (₹{foodItem.options[0].medium})</option>
+                  )}
+                  {foodItem.options[0].large && (
+                    <option value="large">Large (₹{foodItem.options[0].large})</option>
+                  )}
+                </>
+              )}
+            </select>
+          </div>
+        )}
+
+        <div className="flex items-center justify-between bg-gray-50 p-3 rounded-lg border border-gray-100 hover:border-green-200 transition-colors duration-300">
           <label className="text-gray-700 text-sm font-medium flex items-center">
-            <FaSortNumericUp className="mr-2 text-gray-500" /> Quantity:
+            <FaSortNumericUp className={`mr-2 transition-colors duration-300 ${isHovered ? 'text-green-500' : 'text-gray-400'}`} /> 
+            Quantity:
           </label>
           <select
             value={quantity}
             onChange={(e) => setQuantity(Number(e.target.value))}
-            className="bg-white text-gray-800 p-1 rounded-md border border-gray-300 shadow-sm cursor-pointer text-sm"
+            className="bg-white text-gray-800 p-2 rounded-md border border-gray-200 shadow-sm cursor-pointer text-sm
+                       focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300"
           >
             {quantities.map((num) => (
               <option key={num} value={num}>{num}</option>
@@ -46,30 +126,19 @@ const FoodCard = () => {
           </select>
         </div>
 
-        <div className="mt-3 flex items-center justify-between bg-gray-100 p-2 rounded-md">
-          <label className="text-gray-700 text-sm font-medium flex items-center">
-            <FaPizzaSlice className="mr-2 text-gray-500" /> Size:
-          </label>
-          <select
-            value={size}
-            onChange={(e) => setSize(e.target.value)}
-            className="bg-white text-gray-800 p-1 rounded-md border border-gray-300 shadow-sm cursor-pointer text-sm"
+        <div className="flex items-center justify-between pt-2">
+          <div className="text-lg font-bold text-green-600 flex items-center transform transition-all duration-300 hover:scale-105">
+            <FaRupeeSign className="mr-1" /> {calculatePrice()}
+          </div>
+          <button 
+            className="flex items-center gap-2 bg-green-500 text-white px-4 py-2 rounded-lg font-medium
+                     hover:bg-green-600 transform hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 
+                     transition-all duration-300"
           >
-            {sizes.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
+            <FaShoppingCart className={`text-lg transition-transform duration-300 ${isHovered ? 'rotate-12' : ''}`} />
+            Add to Cart
+          </button>
         </div>
-
-        <div className="mt-3 text-base font-semibold text-green-600 flex items-center">
-          <FaRupeeSign className="mr-2" /> Total: ₹{totalPrice}
-        </div>
-
-        <button className="mt-3 w-full bg-green-500 text-white py-2 rounded-lg font-medium hover:bg-green-600 transition text-sm">
-          Order Now
-        </button>
       </div>
     </div>
   );

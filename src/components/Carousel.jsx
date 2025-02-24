@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import React from "react";
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 
@@ -15,49 +15,62 @@ const images = [
   "https://images.pexels.com/photos/1639562/pexels-photo-1639562.jpeg",
 ];
 
-export default function Carousel() {
+export default function Carousel({ onSearch }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [search, setSearch] = useState("");
+
+  // Auto-advance carousel
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+    }, 5000); // Change slide every 5 seconds
+
+    return () => clearInterval(timer);
+  }, []);
 
   const nextSlide = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
   };
 
   const prevSlide = () => {
-    setCurrentIndex(
-      (prevIndex) => (prevIndex - 1 + images.length) % images.length
-    );
+    setCurrentIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!search.trim()) {
+      alert("Please enter a food item to search!");
+      return;
+    }
+    onSearch(search.trim());
   };
 
   return (
     <div className="relative w-full">
       {/* Search Bar */}
       <form
-  onSubmit={(e) => {
-    e.preventDefault();
-    if (!search.trim()) {
-      alert("Please enter a food item to search!");
-      return;
-    }
-  }}
-  className="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-50 flex items-center rounded-full shadow-md "
->
-  <input
-    type="text"
-    placeholder="🔍 Search tasty food... 🍕🍔🥗🥤"
-    value={search}
-    onChange={(e) => setSearch(e.target.value)}
-    className="p-3 w-56 md:w-80 outline-none bg-gray-800 text-gray-200 placeholder-gray-400 border-none rounded-l-full transition "
-  />
-  <button
-    type="submit"
-    className="p-3 bg-gray-700 text-gray-300 rounded-r-full hover:bg-gray-600 transition-all"
-  >
-    <Search className="w-6 h-6" />
-  </button>
-</form>
+        onSubmit={handleSubmit}
+        className="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-50 flex items-center rounded-full shadow-md"
+      >
+        <input
+          type="text"
+          placeholder="🔍 Search tasty food... 🍕🍔🥗🥤"
+          value={search}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            onSearch(e.target.value); // Real-time search
+          }}
+          className="p-3 w-56 md:w-80 outline-none bg-gray-800 text-gray-200 placeholder-gray-400 border-none rounded-l-full transition"
+        />
+        <button
+          type="submit"
+          className="p-3 bg-gray-700 text-gray-300 rounded-r-full hover:bg-gray-600 transition-all"
+        >
+          <Search className="w-6 h-6" />
+        </button>
+      </form>
 
-
+      {/* Rest of your carousel code... */}
       {/* Carousel wrapper */}
       <div className="relative h-56 md:h-96 overflow-hidden rounded-lg">
         {images.map((image, index) => (
