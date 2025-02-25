@@ -4,6 +4,7 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 
 const FoodCard = ({ foodItem }) => {
+  console.log(foodItem);  
   const quantities = [1, 2, 3, 4, 5];
   const [quantity, setQuantity] = useState(1);
   const [size, setSize] = useState(() => {
