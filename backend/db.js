@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 // actually it should myiFood
 
 // MongoDB connection URI
-const mongoURI = 'mongodb+srv://usernamemyiFood:passwordmyiFood@myifood.4b0lh.mongodb.net/';
+const mongoURI = process.env.MONGO_URI;
 
 
 // Global variables to store fetched data
@@ -12,6 +12,8 @@ global.food_category = [];
 
 const mongoDB = async () => {
   try {
+    console.log("Attempting to connect to MongoDB with URI:", 
+      mongoURI.replace(/:([^:@]+)@/, ':****@')); 
     await mongoose.connect(mongoURI, {
       useNewUrlParser: true,
       useUnifiedTopology: true
@@ -39,7 +41,8 @@ const mongoDB = async () => {
     global.food_category = food_category_data;
 
   } catch (error) {
-    console.error("MongoDB connection error:", error);
+    console.error("MongoDB connection error:", error.message);
+    console.error("Please check your MongoDB credentials and network connection");
     process.exit(1);
   }
 };
