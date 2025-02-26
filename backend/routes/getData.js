@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
+
 // Route to get all food items
 router.get('/fooditems', async (req, res) => {
     try {
