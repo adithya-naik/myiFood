@@ -16,7 +16,7 @@ const Home = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const categoriesResponse = await fetch('http://localhost:3000/api/foodcategory');
+        const categoriesResponse = await fetch(`${window.location.origin}/api/foodcategory`);
         const categoriesData = await categoriesResponse.json();
 
         if (categoriesData.success) {
@@ -39,7 +39,7 @@ const Home = () => {
     const fetchItems = async () => {
       try {
         setLoading(true);
-        const itemsResponse = await fetch('http://localhost:3000/api/fooditems');
+        const itemsResponse = await fetch(`${window.location.origin}/api/fooditems`);
         const itemsData = await itemsResponse.json();
 
         if (itemsData.success) {

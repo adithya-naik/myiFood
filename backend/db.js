@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 // actually it should myiFood
 
 // MongoDB connection URI
-const mongoURI = 'mongodb://localhost:27017/myistay';
+const mongoURI = 'mongodb+srv://usernamemyiFood:passwordmyiFood@myifood.4b0lh.mongodb.net/';
 
 
 // Global variables to store fetched data
