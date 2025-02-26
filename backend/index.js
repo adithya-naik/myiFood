@@ -15,12 +15,13 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get("/", (req, res) => {
-  app.use(express.static(path.resolve(__dirname, "frontend", "dist")));
-  res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
+// Serve static files from the frontend dist folder
+app.use(express.static(path.resolve(__dirname, 'frontend', 'dist')));
+
+// All other GET requests should return the frontend's index.html
+app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'frontend', 'dist', 'index.html'));
 });
-
-
 app.use(express.json());
 app.use('/api', require('./routes/createUser'));
 app.use('/api', require('./routes/getData'));
