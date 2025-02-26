@@ -1,5 +1,5 @@
  const mangoose = require('mongoose');
- const { Schema } = mangoose;
+ const { Schema } = mongoose;
 
 const OrdersSchema  = new Schema({
   email : {
