@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 // MongoDB connection URI
 const mongoURI = 'mongodb://localhost:27017/myistay';
 
+
 // Global variables to store fetched data
 global.food_items = [];
 global.food_category = [];

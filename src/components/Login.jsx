@@ -2,11 +2,21 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { CiLogin } from "react-icons/ci";
 import { useNavigate } from "react-router-dom";
+import { motion } from 'framer-motion';
+import { toast } from 'react-hot-toast';
 const Login = () => {
   const [credentials, setCredentials] = useState({
+    name:"",
     email: "",
     password: "",
   });
+
+  // console.log(credentials);
+  localStorage.setItem("credentials", JSON.stringify(credentials));
+  localStorage.setItem("email", credentials.email);
+  localStorage.setItem("name", credentials.name);
+
+  
 const navigate = useNavigate();
   const onchange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
@@ -14,33 +24,46 @@ const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // backend vala port number
-    const response = await fetch("http://localhost:3000/api/loginUser", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: credentials.email,
-        password: credentials.password,
-      }),
-    });
-
-    const json = await response.json();
-    console.log(json);
-    if (!json.success) {
-      alert("Enter valid details");
-    } 
-    if(json.success){
-      localStorage.setItem("authToken", json.authToken);
-      console.log(localStorage.getItem("authToken"));  
-      navigate("/");
-
+    try {
+      const response = await fetch("http://localhost:3000/api/loginUser", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: credentials.email,
+          password: credentials.password,
+        }),
+      });
+  
+      const json = await response.json();
+      if (!json.success) {
+        toast.error("Invalid credentials", {
+          icon: '❌',
+        });
+      } 
+      if(json.success){
+        localStorage.setItem("authToken", json.authToken);
+        toast.success("Login successful!", {
+          icon: '✅',
+        });
+        navigate("/");
+      }
+    } catch (error) {
+      toast.error("Login failed. Please try again.", {
+        icon: '❌',
+      });
     }
   };
 
   return (
+    
     <div>
+      <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    exit={{ opacity: 0, y: -20 }}
+  >
       <section className="bg-gray-50 dark:bg-gray-900">
         <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
           <a
@@ -120,6 +143,7 @@ const navigate = useNavigate();
           </div>
         </div>
       </section>
+      </motion.div>
     </div>
   );
 };

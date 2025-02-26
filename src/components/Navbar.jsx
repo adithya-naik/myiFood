@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
+import { toast } from 'react-hot-toast';
+import { useCart } from '../context/CartContext';
 import {
   LogIn,
   UserPlus,
@@ -14,10 +16,9 @@ import {
   Home
 } from "lucide-react";
 import { FaShoppingCart } from "react-icons/fa";
-
 // Navigation items for non-authenticated users
 const publicNavigation = [
-  
+
   { name: "Home", href: "/", icon: Home },
   { name: "Login", href: "/login", icon: LogIn },
   { name: "Signup", href: "/createuser", icon: UserPlus },
@@ -42,7 +43,9 @@ const Navbar = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-
+  const { clearCart, items } = useCart(); // Get the items array from the cart context
+  const auth = localStorage.getItem('authToken');
+  const userName = localStorage.getItem('userName');
   // Check authentication status and device type on component mount
   useEffect(() => {
     // Check if user is authenticated
@@ -67,8 +70,25 @@ const Navbar = () => {
   // Handle logout
   const handleLogout = () => {
     localStorage.removeItem("authToken");
-    setIsAuthenticated(false);
-    navigate("/");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("userEmail");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("credentials");
+
+    // Clear cart
+    clearCart();
+
+    toast.success("Logged out successfully!", {
+      duration: 2000,
+      icon: '👋',
+      style: {
+        background: '#22c55e',
+        color: '#fff',
+      },
+    });
+
+    // Force page reload to update navbar and cart
+    window.location.href = "/";
   };
 
   // Get current navigation items based on auth status
@@ -116,6 +136,11 @@ const Navbar = () => {
                     >
                       <item.icon className="h-4 w-4" />
                       {item.name}
+                      {item.name === "Cart" && items.length > 0 && (
+                        <span className="ml-1 rounded-full bg-red-600 px-2 py-0.5 text-xs font-medium text-white">
+                          {items.length}
+                        </span>
+                      )}
                     </Link>
                   ))}
                 </div>
@@ -126,9 +151,7 @@ const Navbar = () => {
                     {/* Notifications */}
                     <button className="rounded-full p-1 text-gray-400 hover:text-white transition-colors duration-200">
                       <Bell className="h-6 w-6" />
-                    </button>
-
-                    {/* Profile dropdown */}
+                    </button>...{/* Profile dropdown */}
                     {isMobile ? (
                       <Menu as="div" className="relative">
                         <Menu.Button
@@ -232,6 +255,11 @@ const Navbar = () => {
                   >
                     <item.icon className="h-5 w-5" />
                     {item.name}
+                    {item.name === "Cart" && items.length > 0 && (
+                      <span className="ml-1 rounded-full bg-red-600 px-2 py-0.5 text-xs font-medium text-white">
+                        {items.length}
+                      </span>
+                    )}
                   </Link>
                 ))}
               </div>

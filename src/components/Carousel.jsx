@@ -50,7 +50,7 @@ export default function Carousel({ onSearch }) {
       {/* Search Bar */}
       <form
         onSubmit={handleSubmit}
-        className="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-50 flex items-center rounded-full shadow-md"
+        className="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-10 flex items-center rounded-full shadow-md"
       >
         <input
           type="text"
