@@ -2,7 +2,7 @@ const express = require('express')
 const mongoDB = require('./db');
 const app = express()
 const port = 3000
-
+require('dotenv').config()
 mongoDB();
 
 
@@ -25,6 +25,6 @@ app.use('/api', require('./routes/getData'));
 app.use('/api', require('./routes/orderData'));
 app.use('/api', require('./routes/fetchUserOrders'));
 
-app.listen(port, () => {
+app.listen(process.env.PORT, () => {
   console.log(`Example app listening on port ${port}`)
 })
