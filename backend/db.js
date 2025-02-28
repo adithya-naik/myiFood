@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
-
+require('dotenv').config()
 // actually it should myiFood
 
 // MongoDB connection URI
-const mongoURI = 'mongodb://localhost:27017/myistay';
+// const mongoURI = 'MONGO_URI';
 
 
 // Global variables to store fetched data
@@ -12,7 +12,7 @@ global.food_category = [];
 
 const mongoDB = async () => {
   try {
-    await mongoose.connect(mongoURI, {
+    await mongoose.connect(process.env.MONGO_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true
     });

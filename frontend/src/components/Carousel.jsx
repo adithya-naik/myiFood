@@ -38,11 +38,26 @@ export default function Carousel({ onSearch }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    performSearch();
+  };
+
+  const performSearch = () => {
     if (!search.trim()) {
       alert("Please enter a food item to search!");
       return;
     }
     onSearch(search.trim());
+  };
+
+  const handleInputChange = (e) => {
+    setSearch(e.target.value);
+    // No longer calling onSearch here, only updating local state
+  };
+
+  // Clear search results if input is cleared
+  const handleInputClear = () => {
+    setSearch("");
+    onSearch("");
   };
 
   return (
@@ -56,21 +71,27 @@ export default function Carousel({ onSearch }) {
           type="text"
           placeholder="🔍 Search tasty food... 🍕🍔🥗🥤"
           value={search}
-          onChange={(e) => {
-            setSearch(e.target.value);
-            onSearch(e.target.value); // Real-time search
-          }}
+          onChange={handleInputChange}
           className="p-3 w-56 md:w-80 outline-none bg-gray-800 text-gray-200 placeholder-gray-400 border-none rounded-l-full transition"
         />
+        {search && (
+          <button
+            type="button"
+            onClick={handleInputClear}
+            className="absolute right-16 text-gray-400 hover:text-gray-200"
+          >
+            ✕
+          </button>
+        )}
         <button
-          type="submit"
+          type="button" // Changed to button type to prevent form submission
+          onClick={performSearch}
           className="p-3 bg-gray-700 text-gray-300 rounded-r-full hover:bg-gray-600 transition-all"
         >
-          <Search className="w-6 h-6" />
+          <Search className="w-6 h-6 cursor-pointer" />
         </button>
       </form>
 
-      {/* Rest of your carousel code... */}
       {/* Carousel wrapper */}
       <div className="relative h-56 md:h-96 overflow-hidden rounded-lg">
         {images.map((image, index) => (

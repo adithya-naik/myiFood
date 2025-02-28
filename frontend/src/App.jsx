@@ -7,10 +7,11 @@ import MyOrders from "./components/MyOrders";
 import NotFound from "./components/NotFound";
 import { CartProvider } from "./context/CartContext";
 import Cart from "./components/Cart";
+import Notifications from "./components/Notifications";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { Toaster } from "react-hot-toast";
-
+import ScrollToTop from "./components/ScrollToTop";
 function App() {
   useEffect(() => {
     AOS.init({
@@ -23,6 +24,7 @@ function App() {
   return (
     <CartProvider>
       <Router>
+      <ScrollToTop />
         <Toaster
          position="top-center"
          reverseOrder={false}
@@ -42,6 +44,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/createuser" element={<SignUp />} />
           <Route path="/orders" element={<MyOrders />} />
+          <Route path="/notifications" element={<Notifications />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
