@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
-import { User, MapPin, Mail, Lock, Save, AlertTriangle, ArrowLeft } from "lucide-react";
+import { User, MapPin, Mail, Lock, Save, AlertTriangle, ArrowLeft, Edit, Check } from "lucide-react";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -18,6 +18,7 @@ const Profile = () => {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deletePassword, setDeletePassword] = useState("");
   const [deleting, setDeleting] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     const checkAuth = () => {
@@ -138,6 +139,9 @@ const Profile = () => {
           ...userData,
           password: "",  // Clear password field after update
         });
+        
+        // Exit edit mode after successful update
+        setIsEditing(false);
       } else {
         toast.error(data.message || "Failed to update profile");
         setError(data.message || "Failed to update profile");
@@ -221,7 +225,9 @@ const Profile = () => {
         <div className="bg-white rounded-lg shadow-md overflow-hidden">
           <div className="bg-gradient-to-r from-gray-900 to-gray-800 text-white p-6">
             <h1 className="text-2xl font-bold mb-2">Profile Settings</h1>
-            <p className="text-gray-300">Update your personal information</p>
+            <p className="text-gray-300">
+              {isEditing ? "Update your personal information" : "Your personal information"}
+            </p>
           </div>
 
           {error && (
@@ -230,104 +236,55 @@ const Profile = () => {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="p-6 space-y-6">
-            <div className="relative">
-              <label className="block text-gray-700 mb-2 font-medium">Full Name</label>
-              <div className="flex items-center border rounded-md overflow-hidden">
-                <div className="bg-gray-100 p-3 border-r">
-                  <User className="h-5 w-5 text-gray-500" />
+          {!isEditing ? (
+            <div className="p-6 space-y-6">
+              {/* View-only profile section */}
+              <div className="bg-gray-50 rounded-lg p-5 border border-gray-200">
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-lg font-semibold text-gray-800">Account Details</h2>
+                  <button
+                    onClick={() => setIsEditing(true)}
+                    className="flex items-center gap-1 bg-yellow-100 text-yellow-700 px-3 py-1.5 rounded-md hover:bg-yellow-200 transition-colors"
+                  >
+                    <Edit className="h-4 w-4" />
+                    Edit Profile
+                  </button>
                 </div>
-                <input
-                  type="text"
-                  name="name"
-                  value={userData.name}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 focus:outline-none"
-                  placeholder="Your full name"
-                  required
-                />
-              </div>
-            </div>
 
-            <div className="relative">
-              <label className="block text-gray-700 mb-2 font-medium">Email Address</label>
-              <div className="flex items-center border rounded-md overflow-hidden">
-                <div className="bg-gray-100 p-3 border-r">
-                  <Mail className="h-5 w-5 text-gray-500" />
+                <div className="space-y-4">
+                  <div className="flex items-start">
+                    <div className="bg-yellow-100 p-2 rounded-full mr-3">
+                      <User className="h-5 w-5 text-yellow-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">Full Name</p>
+                      <p className="font-medium">{userData.name}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start">
+                    <div className="bg-yellow-100 p-2 rounded-full mr-3">
+                      <Mail className="h-5 w-5 text-yellow-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">Email Address</p>
+                      <p className="font-medium">{userData.email}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start">
+                    <div className="bg-yellow-100 p-2 rounded-full mr-3">
+                      <MapPin className="h-5 w-5 text-yellow-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">Location</p>
+                      <p className="font-medium">{userData.location || "Not specified"}</p>
+                    </div>
+                  </div>
                 </div>
-                <input
-                  type="email"
-                  name="email"
-                  value={userData.email}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 focus:outline-none"
-                  placeholder="Your email address"
-                  required
-                />
               </div>
-            </div>
 
-            <div className="relative">
-              <label className="block text-gray-700 mb-2 font-medium">Location</label>
-              <div className="flex items-center border rounded-md overflow-hidden">
-                <div className="bg-gray-100 p-3 border-r">
-                  <MapPin className="h-5 w-5 text-gray-500" />
-                </div>
-                <input
-                  type="text"
-                  name="location"
-                  value={userData.location}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 focus:outline-none"
-                  placeholder="Your location"
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="relative">
-              <label className="block text-gray-700 mb-2 font-medium">
-                Password <span className="text-gray-500 text-sm">(Leave blank to keep current)</span>
-              </label>
-              <div className="flex items-center border rounded-md overflow-hidden">
-                <div className="bg-gray-100 p-3 border-r">
-                  <Lock className="h-5 w-5 text-gray-500" />
-                </div>
-                <input
-                  type="password"
-                  name="password"
-                  value={userData.password}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 focus:outline-none"
-                  placeholder="New password (optional)"
-                />
-              </div>
-            </div>
-
-            <button
-              type="submit"
-              disabled={saving}
-              className={`w-full bg-gradient-to-r from-yellow-500 to-yellow-600 text-white py-3 px-4 rounded-md font-medium flex justify-center items-center gap-2 hover:from-yellow-600 hover:to-yellow-700 transition-all duration-200 ${
-                saving ? "opacity-70 cursor-not-allowed" : ""
-              }`}
-            >
-              {saving ? (
-                <>
-                  <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white"></div>
-                  Saving...
-                </>
-              ) : (
-                <>
-                  <Save className="h-5 w-5" />
-                  Save Changes
-                </>
-              )}
-            </button>
-          </form>
-          
-          <div className="px-6 pb-6 pt-2">
-            <div className="border-t border-gray-200 pt-4">
-              {!showDeleteConfirm ? (
+              <div className="border-t border-gray-200 pt-4">
                 <button 
                   onClick={() => setShowDeleteConfirm(true)}
                   className="w-full bg-red-100 text-red-600 py-3 px-4 rounded-md font-medium flex justify-center items-center gap-2 hover:bg-red-200 transition-all duration-200"
@@ -335,61 +292,240 @@ const Profile = () => {
                   <AlertTriangle className="h-5 w-5" />
                   Delete My Account
                 </button>
-              ) : (
-                <div className="bg-red-50 p-4 rounded-md border border-red-200">
-                  <h3 className="text-red-600 font-medium mb-3">Confirm Account Deletion</h3>
-                  <p className="text-gray-700 text-sm mb-4">
-                    This action cannot be undone. All your data will be permanently deleted.
-                  </p>
-                  
-                  <form onSubmit={handleDeleteAccount}>
-                    <div className="mb-3">
-                      <label className="block text-gray-700 text-sm mb-1">
-                        Enter your password to confirm
-                      </label>
-                      <input
-                        type="password"
-                        value={deletePassword}
-                        onChange={(e) => setDeletePassword(e.target.value)}
-                        className="w-full border border-gray-300 rounded p-2 text-sm"
-                        placeholder="Your current password"
-                        required
-                      />
-                    </div>
-                    
-                    <div className="flex gap-2">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setShowDeleteConfirm(false);
-                          setDeletePassword("");
-                        }}
-                        className="flex-1 bg-gray-200 text-gray-700 py-2 rounded text-sm"
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        type="submit"
-                        disabled={deleting}
-                        className={`flex-1 bg-red-600 text-white py-2 rounded text-sm flex justify-center items-center ${
-                          deleting ? "opacity-70 cursor-not-allowed" : ""
-                        }`}
-                      >
-                        {deleting ? (
-                          <>
-                            <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div>
-                            Deleting...
-                          </>
-                        ) : (
-                          "Delete Account"
-                        )}
-                      </button>
-                    </div>
-                  </form>
-                </div>
-              )}
+              </div>
             </div>
-          </div>
+          ) : (
+            <>
+              {/* Edit profile form */}
+              <form onSubmit={handleSubmit} className="p-6 space-y-6">
+                <div className="relative">
+                  <label className="block text-gray-700 mb-2 font-medium">Full Name</label>
+                  <div className="flex items-center border rounded-md overflow-hidden">
+                    <div className="bg-gray-100 p-3 border-r">
+                      <User className="h-5 w-5 text-gray-500" />
+                    </div>
+                    <input
+                      type="text"
+                      name="name"
+                      value={userData.name}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 focus:outline-none"
+                      placeholder="Your full name"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="relative">
+                  <label className="block text-gray-700 mb-2 font-medium">Email Address</label>
+                  <div className="flex items-center border rounded-md overflow-hidden">
+                    <div className="bg-gray-100 p-3 border-r">
+                      <Mail className="h-5 w-5 text-gray-500" />
+                    </div>
+                    <input
+                      type="email"
+                      name="email"
+                      value={userData.email}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 focus:outline-none"
+                      placeholder="Your email address"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="relative">
+                  <label className="block text-gray-700 mb-2 font-medium">Location</label>
+                  <div className="flex items-center border rounded-md overflow-hidden">
+                    <div className="bg-gray-100 p-3 border-r">
+                      <MapPin className="h-5 w-5 text-gray-500" />
+                    </div>
+                    <input
+                      type="text"
+                      name="location"
+                      value={userData.location}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 focus:outline-none"
+                      placeholder="Your location"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="relative">
+                  <label className="block text-gray-700 mb-2 font-medium">
+                    Password <span className="text-gray-500 text-sm">(Leave blank to keep current)</span>
+                  </label>
+                  <div className="flex items-center border rounded-md overflow-hidden">
+                    <div className="bg-gray-100 p-3 border-r">
+                      <Lock className="h-5 w-5 text-gray-500" />
+                    </div>
+                    <input
+                      type="password"
+                      name="password"
+                      value={userData.password}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 focus:outline-none"
+                      placeholder="New password (optional)"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setIsEditing(false)}
+                    className="flex-1 bg-gray-200 text-gray-700 py-3 px-4 rounded-md font-medium flex justify-center items-center gap-2 hover:bg-gray-300 transition-all duration-200"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={saving}
+                    className={`flex-1 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white py-3 px-4 rounded-md font-medium flex justify-center items-center gap-2 hover:from-yellow-600 hover:to-yellow-700 transition-all duration-200 ${
+                      saving ? "opacity-70 cursor-not-allowed" : ""
+                    }`}
+                  >
+                    {saving ? (
+                      <>
+                        <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white"></div>
+                        Saving...
+                      </>
+                    ) : (
+                      <>
+                        <Save className="h-5 w-5" />
+                        Save Changes
+                      </>
+                    )}
+                  </button>
+                </div>
+              </form>
+              
+              {/* Delete account section */}
+              <div className="px-6 pb-6 pt-2">
+                <div className="border-t border-gray-200 pt-4">
+                  {!showDeleteConfirm ? (
+                    <button 
+                      onClick={() => setShowDeleteConfirm(true)}
+                      className="w-full bg-red-100 text-red-600 py-3 px-4 rounded-md font-medium flex justify-center items-center gap-2 hover:bg-red-200 transition-all duration-200"
+                    >
+                      <AlertTriangle className="h-5 w-5" />
+                      Delete My Account
+                    </button>
+                  ) : (
+                    <div className="bg-red-50 p-4 rounded-md border border-red-200">
+                      <h3 className="text-red-600 font-medium mb-3">Confirm Account Deletion</h3>
+                      <p className="text-gray-700 text-sm mb-4">
+                        This action cannot be undone. All your data will be permanently deleted.
+                      </p>
+                      
+                      <form onSubmit={handleDeleteAccount}>
+                        <div className="mb-3">
+                          <label className="block text-gray-700 text-sm mb-1">
+                            Enter your password to confirm
+                          </label>
+                          <input
+                            type="password"
+                            value={deletePassword}
+                            onChange={(e) => setDeletePassword(e.target.value)}
+                            className="w-full border border-gray-300 rounded p-2 text-sm"
+                            placeholder="Your current password"
+                            required
+                          />
+                        </div>
+                        
+                        <div className="flex gap-2">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setShowDeleteConfirm(false);
+                              setDeletePassword("");
+                            }}
+                            className="flex-1 bg-gray-200 text-gray-700 py-2 rounded text-sm"
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            type="submit"
+                            disabled={deleting}
+                            className={`flex-1 bg-red-600 text-white py-2 rounded text-sm flex justify-center items-center ${
+                              deleting ? "opacity-70 cursor-not-allowed" : ""
+                            }`}
+                          >
+                            {deleting ? (
+                              <>
+                                <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div>
+                                Deleting...
+                              </>
+                            ) : (
+                              "Delete Account"
+                            )}
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </>
+          )}
+          
+          {/* Delete confirmation form for view mode */}
+          {!isEditing && showDeleteConfirm && (
+            <div className="px-6 pb-6">
+              <div className="bg-red-50 p-4 rounded-md border border-red-200">
+                <h3 className="text-red-600 font-medium mb-3">Confirm Account Deletion</h3>
+                <p className="text-gray-700 text-sm mb-4">
+                  This action cannot be undone. All your data will be permanently deleted.
+                </p>
+                
+                <form onSubmit={handleDeleteAccount}>
+                  <div className="mb-3">
+                    <label className="block text-gray-700 text-sm mb-1">
+                      Enter your password to confirm
+                    </label>
+                    <input
+                      type="password"
+                      value={deletePassword}
+                      onChange={(e) => setDeletePassword(e.target.value)}
+                      className="w-full border border-gray-300 rounded p-2 text-sm"
+                      placeholder="Your current password"
+                      required
+                    />
+                  </div>
+                  
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowDeleteConfirm(false);
+                        setDeletePassword("");
+                      }}
+                      className="flex-1 bg-gray-200 text-gray-700 py-2 rounded text-sm"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={deleting}
+                      className={`flex-1 bg-red-600 text-white py-2 rounded text-sm flex justify-center items-center ${
+                        deleting ? "opacity-70 cursor-not-allowed" : ""
+                      }`}
+                    >
+                      {deleting ? (
+                        <>
+                          <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div>
+                          Deleting...
+                        </>
+                      ) : (
+                        "Delete Account"
+                      )}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
