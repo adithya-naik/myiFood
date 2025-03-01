@@ -49,7 +49,7 @@ const SignUp = () => {
         });
         
         // Force page reload to update navbar and cart
-        window.location.href = "/";
+        window.location.href = "/login";
       } else {
         toast.error(json.message || "Please enter valid details", {
           duration: 3000,
