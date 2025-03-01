@@ -1,106 +1,108 @@
-import React from 'react';
-import { useCart } from '../context/CartContext';
-import { Minus, Plus, Trash2, ShoppingBag, ArrowRight } from 'lucide-react';
-import { FaRupeeSign } from 'react-icons/fa';
-import { Link, useNavigate } from 'react-router-dom';
-import Navbar from './Navbar';
-import { motion } from 'framer-motion';
-import Footer from './Footer';
+import React from "react";
+import { useCart } from "../context/CartContext";
+import { Minus, Plus, Trash2, ShoppingBag, ArrowRight } from "lucide-react";
+import { FaRupeeSign } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
+import Navbar from "./Navbar";
+import { motion } from "framer-motion";
+import Footer from "./Footer";
 
 import { FaShoppingCart } from "react-icons/fa";
-import { toast } from 'react-hot-toast';
+import { toast } from "react-hot-toast";
 
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1
-    }
-  }
+      staggerChildren: 0.1,
+    },
+  },
 };
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 }
+  visible: { opacity: 1, y: 0 },
 };
 
 const Cart = () => {
-  const { items, total, removeFromCart, updateQuantity,clearCart } = useCart();
+  const { items, total, removeFromCart, updateQuantity, clearCart } = useCart();
   const navigate = useNavigate();
 
-  const handleCheckout = async() => {
-    
-    const authToken = localStorage.getItem('authToken');
+  const handleCheckout = async () => {
+    const authToken = localStorage.getItem("authToken");
     if (!authToken) {
-      toast.error('Please login to checkout', {
-        icon: '🔒',
+      toast.error("Please login to checkout", {
+        icon: "🔒",
       });
-      navigate('/login');
+      navigate("/login");
       return;
     }
-    
-    let email = localStorage.getItem("email")
-    console.log("credentials : ",email)
 
-    const response = await fetch("https://myifoodb.onrender.com/api/orderData", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        order_data : items,
-        email : email,
-        order_date : new Date()
-      }),
+    let email = localStorage.getItem("email");
+    console.log("credentials : ", email);
+
+    const response = await fetch(
+      "https://myifoodb.onrender.com/api/orderData",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          order_data: items,
+          email: email,
+          order_date: new Date(),
+        }),
+      }
+    );
+
+    toast.success("Proceeding...", {
+      icon: "🛍️",
     });
-
-
-
-    toast.success('Proceeding...', {
-      icon: '🛍️',
-    });
-    console.log(response)
-    if(response.status==200){
-      clearCart()
+    console.log(response);
+    if (response.status == 200) {
+      clearCart();
       setTimeout(() => {
-        toast.success('Order Placed...', {
-            icon: '✅',
+        toast.success("Order Placed...", {
+          icon: "✅",
         });
-    }, 2000);
-    
+      }, 2000);
     }
+    navigate('/orders');
   };
 
   if (items.length === 0) {
     return (
       <>
         <Navbar />
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-white to-gray-50 p-4"
         >
           <div className="text-center">
             <motion.div
-              animate={{ 
+              animate={{
                 scale: [1, 1.1, 1],
-                rotateY: [0, 360]
+                rotateY: [0, 360],
               }}
-              transition={{ 
+              transition={{
                 duration: 2,
                 repeat: Infinity,
-                repeatType: "reverse"
+                repeatType: "reverse",
               }}
             >
               <FaShoppingCart className="w-32 h-32 text-green-500/20 mx-auto mb-6" />
             </motion.div>
-            <h2 className="text-3xl font-bold text-gray-800 mb-4">Your cart is empty</h2>
+            <h2 className="text-3xl font-bold text-gray-800 mb-4">
+              Your cart is empty
+            </h2>
             <p className="text-gray-600 mb-8 max-w-md mx-auto">
-              Looks like you haven't added anything to your cart yet. 
-              Explore our delicious menu and add your favorites!
+              Looks like you haven't added anything to your cart yet. Explore
+              our delicious menu and add your favorites!
             </p>
-            <Link 
+            <Link
               to="/"
               className="inline-flex items-center gap-2 bg-green-500 text-white px-8 py-4 rounded-full
                        font-medium hover:bg-green-600 transform hover:-translate-y-1 hover:shadow-lg
@@ -121,23 +123,23 @@ const Cart = () => {
       <Navbar />
       <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
         <div className="container mx-auto px-4 py-8">
-          <motion.h1 
+          <motion.h1
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             className="text-3xl font-bold text-gray-800 mb-8 flex items-center gap-3"
           >
             <ShoppingBag className="w-8 h-8 text-green-500" />
-            Your Cart ({items.length} {items.length === 1 ? 'item' : 'items'})
+            Your Cart ({items.length} {items.length === 1 ? "item" : "items"})
           </motion.h1>
 
-          <motion.div 
+          <motion.div
             variants={containerVariants}
             initial="hidden"
             animate="visible"
             className="space-y-4"
           >
             {items.map((item, index) => (
-              <motion.div 
+              <motion.div
                 variants={itemVariants}
                 key={`${item.id}-${item.size}`}
                 className="group flex flex-col md:flex-row items-center justify-between p-6 bg-white 
@@ -147,18 +149,22 @@ const Cart = () => {
               >
                 <div className="flex items-center space-x-6">
                   <div className="relative overflow-hidden rounded-lg w-24 h-24">
-                    <motion.img 
-                      src={item.img} 
-                      alt={item.name} 
+                    <motion.img
+                      src={item.img}
+                      alt={item.name}
                       className="w-full h-full object-cover"
                       whileHover={{ scale: 1.1 }}
                       transition={{ duration: 0.3 }}
                     />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-lg text-gray-800">{item.name}</h3>
+                    <h3 className="font-semibold text-lg text-gray-800">
+                      {item.name}
+                    </h3>
                     {item.size && (
-                      <p className="text-sm text-gray-500 mt-1">Size: {item.size}</p>
+                      <p className="text-sm text-gray-500 mt-1">
+                        Size: {item.size}
+                      </p>
                     )}
                     <p className="text-green-600 font-medium mt-2 flex items-center">
                       <FaRupeeSign className="mr-1" />
@@ -166,15 +172,19 @@ const Cart = () => {
                     </p>
                   </div>
                 </div>
-              
+
                 <div className="flex items-center space-x-8 mt-4 md:mt-0">
                   <div className="flex items-center bg-gray-50 rounded-full p-1 border border-gray-200">
                     <motion.button
-                      whileHover={{ backgroundColor: '#f0fdf4' }}
+                      whileHover={{ backgroundColor: "#f0fdf4" }}
                       whileTap={{ scale: 0.9 }}
                       onClick={() => {
-                        updateQuantity(item.id, item.size, Math.max(1, item.quantity - 1));
-                        toast.success('Quantity updated');
+                        updateQuantity(
+                          item.id,
+                          item.size,
+                          Math.max(1, item.quantity - 1)
+                        );
+                        toast.success("Quantity updated");
                       }}
                       className="p-2 cursor-pointer rounded-full hover:bg-green-50 text-gray-600 transition-colors
                                disabled:opacity-50 disabled:cursor-not-allowed"
@@ -182,13 +192,19 @@ const Cart = () => {
                     >
                       <Minus className="h-4 w-4" />
                     </motion.button>
-                    <span className="w-12 text-center font-medium text-gray-700">{item.quantity}</span>
+                    <span className="w-12 text-center font-medium text-gray-700">
+                      {item.quantity}
+                    </span>
                     <motion.button
-                      whileHover={{ backgroundColor: '#f0fdf4' }}
+                      whileHover={{ backgroundColor: "#f0fdf4" }}
                       whileTap={{ scale: 0.9 }}
                       onClick={() => {
-                        updateQuantity(item.id, item.size, Math.min(5, item.quantity + 1));
-                        toast.success('Quantity updated');
+                        updateQuantity(
+                          item.id,
+                          item.size,
+                          Math.min(5, item.quantity + 1)
+                        );
+                        toast.success("Quantity updated");
                       }}
                       className="p-2 cursor-pointer rounded-full hover:bg-green-50 text-gray-600 transition-colors
                                disabled:opacity-50 disabled:cursor-not-allowed"
@@ -197,18 +213,18 @@ const Cart = () => {
                       <Plus className="h-4 w-4" />
                     </motion.button>
                   </div>
-                
+
                   <div className="flex items-center font-semibold text-lg text-gray-800">
                     <FaRupeeSign className="text-sm" />
                     {(item.price * item.quantity).toFixed(2)}
                   </div>
-                
+
                   <motion.button
-                    whileHover={{ scale: 1.1, backgroundColor: '#fef2f2' }}
+                    whileHover={{ scale: 1.1, backgroundColor: "#fef2f2" }}
                     whileTap={{ scale: 0.9 }}
                     onClick={() => {
                       removeFromCart(item.id, item.size);
-                      toast.success('Item removed from cart');
+                      toast.success("Item removed from cart");
                     }}
                     className="p-2 cursor-pointer rounded-full text-red-500 hover:bg-red-50 transition-colors"
                     aria-label="Remove item"
@@ -218,8 +234,8 @@ const Cart = () => {
                 </div>
               </motion.div>
             ))}
-          
-            <motion.div 
+
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               className="flex flex-col items-end gap-6 mt-8"
@@ -236,8 +252,8 @@ const Cart = () => {
                   </div>
                 </div>
               </motion.div>
-            
-              <motion.button 
+
+              <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={handleCheckout}
@@ -252,8 +268,8 @@ const Cart = () => {
           </motion.div>
         </div>
       </div>
-      
-      <Footer/>
+
+      <Footer />
     </>
   );
 };

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
-import { User, MapPin, Mail, Lock, Save, AlertTriangle, ArrowLeft, Edit, Check } from "lucide-react";
-
+import { User, MapPin, Mail, Lock, Save, AlertTriangle, ArrowLeft, Edit, Check,UserCog } from "lucide-react";
+import Navbar from "../components/Navbar"
+import Footer from "../components/Footer"
+import GreetingComponent from "../components/GreetingComponent"
 const Profile = () => {
   const navigate = useNavigate();
   const [userData, setUserData] = useState({
@@ -46,7 +48,7 @@ const Profile = () => {
     try {
       setLoading(true);
       console.log("Fetching profile for email:", email);
-      
+     
       const response = await fetch("https://myifoodb.onrender.com/api/getUserProfile", {
         method: "POST",
         headers: {
@@ -212,20 +214,20 @@ const Profile = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 pt-6 pb-12">
-      <div className="max-w-md mx-auto">
-        <button 
-          onClick={() => navigate("/")} 
-          className="mb-4 flex items-center text-gray-600 hover:text-gray-900"
-        >
-          <ArrowLeft className="mr-1 h-4 w-4" />
-          Back to Home
-        </button>
+    <>
+    
+<Navbar/>
+    <div className=" bg-gray-100 pt-6 pb-12">
+      <div className="mb-4">
+
+       <GreetingComponent name={userData.name}/>
+      </div>
+      <div className="max-w-md mx-auto p-2">
         
         <div className="bg-white rounded-lg shadow-md overflow-hidden">
           <div className="bg-gradient-to-r from-gray-900 to-gray-800 text-white p-6">
-            <h1 className="text-2xl font-bold mb-2">Profile Settings</h1>
-            <p className="text-gray-300">
+            <h1 className="text-2xl font-bold mb-2 flex items-center"><div className="px-2"><UserCog/></div>Profile Settings</h1>
+            <p className="text-gray-300 m-2">
               {isEditing ? "Update your personal information" : "Your personal information"}
             </p>
           </div>
@@ -244,7 +246,7 @@ const Profile = () => {
                   <h2 className="text-lg font-semibold text-gray-800">Account Details</h2>
                   <button
                     onClick={() => setIsEditing(true)}
-                    className="flex items-center gap-1 bg-yellow-100 text-yellow-700 px-3 py-1.5 rounded-md hover:bg-yellow-200 transition-colors"
+                    className="flex items-center gap-1 cursor-pointer bg-yellow-100 text-yellow-700 px-3 py-1.5 rounded-md hover:bg-yellow-200 transition-colors"
                   >
                     <Edit className="h-4 w-4" />
                     Edit Profile
@@ -287,7 +289,7 @@ const Profile = () => {
               <div className="border-t border-gray-200 pt-4">
                 <button 
                   onClick={() => setShowDeleteConfirm(true)}
-                  className="w-full bg-red-100 text-red-600 py-3 px-4 rounded-md font-medium flex justify-center items-center gap-2 hover:bg-red-200 transition-all duration-200"
+                  className="w-full bg-red-100 text-red-600 py-3 cursor-pointer px-4 rounded-md font-medium flex justify-center items-center gap-2 hover:bg-red-200 transition-all duration-200"
                 >
                   <AlertTriangle className="h-5 w-5" />
                   Delete My Account
@@ -529,6 +531,8 @@ const Profile = () => {
         </div>
       </div>
     </div>
+<Footer/>
+    </>
   );
 };
 

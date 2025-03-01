@@ -10,23 +10,23 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-8">
           {/* Brand Section */}
           <div className="flex flex-col space-y-4">
-            <h2 className="text-2xl font-bold text-yellow-400">myiFood</h2>
+            <Link to="/" className="text-2xl font-bold text-yellow-400">myiFood</Link>
             <p className="text-gray-300 max-w-md">
               Experience the Quality Food with a blend of traditional and modern tastes.
             </p>
             <div className="flex space-x-4 mt-4">
-              <a href="#" className="text-gray-400 hover:text-white transition-colors cursor-pointer">
+              <Link to="/social/facebook" className="text-gray-400 hover:text-white transition-colors cursor-pointer">
                 <Facebook className="w-6 h-6" />
-              </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors cursor-pointer">
+              </Link>
+              <Link to="/social/twitter" className="text-gray-400 hover:text-white transition-colors cursor-pointer">
                 <Twitter className="w-6 h-6" />
-              </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors cursor-pointer">
+              </Link>
+              <Link to="/social/instagram" className="text-gray-400 hover:text-white transition-colors cursor-pointer">
                 <Instagram className="w-6 h-6" />
-              </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors cursor-pointer">
+              </Link>
+              <Link to="/social/linkedin" className="text-gray-400 hover:text-white transition-colors cursor-pointer">
                 <Linkedin className="w-6 h-6" />
-              </a>
+              </Link>
             </div>
           </div>
 
@@ -51,18 +51,18 @@ const Footer = () => {
           <div className="flex flex-col space-y-4">
             <h2 className="text-xl font-bold mb-2 text-yellow-400">Contact Us</h2>
             <div className="space-y-3">
-              <div className="flex items-center text-gray-300 hover:text-white transition-colors cursor-pointer">
+              <Link to="/contact/location" className="flex items-center text-gray-300 hover:text-white transition-colors cursor-pointer">
                 <MapPin className="w-5 h-5 mr-3 text-yellow-400" />
                 <p>Yamnampet, Ghatkesar, Hyderabad, India</p>
-              </div>
-              <div className="flex items-center text-gray-300 hover:text-white transition-colors cursor-pointer">
+              </Link>
+              <Link to="/contact/phone" className="flex items-center text-gray-300 hover:text-white transition-colors cursor-pointer">
                 <Phone className="w-5 h-5 mr-3 text-yellow-400" />
                 <p>+91 98765 3210</p>
-              </div>
-              <div className="flex items-center text-gray-300 hover:text-white transition-colors cursor-pointer">
+              </Link>
+              <Link to="/contact/email" className="flex items-center text-gray-300 hover:text-white transition-colors cursor-pointer">
                 <Mail className="w-5 h-5 mr-3 text-yellow-400" />
                 <p>support@myifood.com</p>
-              </div>
+              </Link>
             </div>
           </div>
         </div>
@@ -73,15 +73,15 @@ const Footer = () => {
             © 2025 myiFood — All Rights Reserved
           </p>
           <div className="flex space-x-6">
-            <a href="#" className="text-gray-400 hover:text-yellow-400 text-sm transition-colors cursor-pointer">
+            <Link to="/privacy-policy" className="text-gray-400 hover:text-yellow-400 text-sm transition-colors cursor-pointer">
               Privacy Policy
-            </a>
-            <a href="#" className="text-gray-400 hover:text-yellow-400 text-sm transition-colors cursor-pointer">
+            </Link>
+            <Link to="/terms-of-service" className="text-gray-400 hover:text-yellow-400 text-sm transition-colors cursor-pointer">
               Terms of Service
-            </a>
-            <a href="#" className="text-gray-400 hover:text-yellow-400 text-sm transition-colors cursor-pointer">
+            </Link>
+            <Link to="/cookie-policy" className="text-gray-400 hover:text-yellow-400 text-sm transition-colors cursor-pointer">
               Cookie Policy
-            </a>
+            </Link>
           </div>
         </div>
       </div>

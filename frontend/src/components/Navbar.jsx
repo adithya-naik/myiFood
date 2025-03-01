@@ -1439,6 +1439,7 @@ const Navbar = () => {
   const { clearCart, items } = useCart();
   const userName = localStorage.getItem('userName');
 
+  const def = localStorage.getItem("name") || "User";
   // Check authentication status and device type on component mount
   useEffect(() => {
     const checkAuth = () => {
@@ -1462,7 +1463,8 @@ const Navbar = () => {
       window.removeEventListener("storage", checkAuth);
     };
   }, []);
-
+ let user =  localStorage.getItem("email") || 'User'
+ user =  user.split("@")[0].replace(/^./, (char) => char.toUpperCase())
   // Handle logout
   const handleLogout = () => {
     // Update authentication state immediately
@@ -1474,6 +1476,7 @@ const Navbar = () => {
     localStorage.removeItem("userEmail");
     localStorage.removeItem("userName");
     localStorage.removeItem("credentials");
+    localStorage.removeItem("email");
 
     // Clear cart
     clearCart();
@@ -1562,9 +1565,17 @@ const Navbar = () => {
                       src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
                       alt="User"
                     />
+
+
+
+
+
+
+
+
                     <span className="inline-block mr-1 text-sm font-medium truncate max-w-[100px]">
-                      {userName || 'User'}
-                    </span>
+  {user || "User"}
+</span>
                     <ChevronDown className="h-4 w-4 text-gray-300" />
                   </Menu.Button>
                   <Transition

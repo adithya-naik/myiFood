@@ -12,10 +12,9 @@ const Login = () => {
   });
 
   // console.log(credentials);
-  localStorage.setItem("credentials", JSON.stringify(credentials));
+  localStorage.setItem("credentials here", JSON.stringify(credentials));
   localStorage.setItem("email", credentials.email);
-  localStorage.setItem("name", credentials.name);
-
+  localStorage.setItem("name here", credentials.name);
   
 const navigate = useNavigate();
   const onchange = (e) => {

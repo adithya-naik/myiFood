@@ -85,7 +85,7 @@ const OrderStatsChart = ({ orders }) => {
   const COLORS = ['#4ade80', '#f87171', '#60a5fa', '#fbbf24', '#a78bfa'];
 
   return (
-    <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 space-y-8">
+    <div className="bg-white rounded-xl cursor-pointer shadow-sm p-6 border border-gray-100 space-y-8">
       {/* <h2 className="text-xl font-semibold text-gray-800 mb-4">Order Analytics</h2> */}
       <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
               <ChartSpline className="w-5 h-5 text-green-500" />
@@ -93,9 +93,11 @@ const OrderStatsChart = ({ orders }) => {
             </h2>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Spending Trend Chart */}
-        <div className="bg-gray-50 rounded-lg p-4">
+        <div className="bg-gray-50 cursor-pointer rounded-lg p-4">
           <h3 className="text-md font-medium text-gray-700 mb-3">Spending Trend</h3>
-          <ResponsiveContainer width="100%" height={250}>
+          <ResponsiveContainer 
+          className="cursor-pointer"
+          width="100%" height={250}>
             <AreaChart
               data={chartData.spendingTrend}
               margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
@@ -118,7 +120,7 @@ const OrderStatsChart = ({ orders }) => {
         </div>
         
         {/* Food Preference Distribution */}
-        <div className="bg-gray-50 rounded-lg p-4">
+        <div className="bg-gray-50 cursor-pointer rounded-lg p-4">
           <h3 className="text-md font-medium text-gray-700 mb-3">Food Preference</h3>
           <ResponsiveContainer width="100%" height={250}>
             <PieChart>

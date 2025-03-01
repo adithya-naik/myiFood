@@ -53,7 +53,8 @@ const Home = () => {
     const now = Date.now();
     return dataCache[cacheType] && (now - dataCache.lastFetch[cacheType] < CACHE_DURATION);
   };
-
+  let user =  localStorage.getItem("email") || 'Dear User'
+  user =  user.split("@")[0].replace(/^./, (char) => char.toUpperCase())
   // Combined initialization effect that runs only once
   useEffect(() => {
     const initializeData = async () => {
@@ -160,7 +161,7 @@ const Home = () => {
     <div className="min-h-screen bg-gray-50">
       <Navbar />
       <Carousel onSearch={handleSearch} />
-      <GreetingComponent />
+      <GreetingComponent name={user} />
       <div className="container mx-auto px-4 py-8">
         {searchTerm ? (
           <div className="mb-8">

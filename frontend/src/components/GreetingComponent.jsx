@@ -26,10 +26,12 @@ const SpotlightCard = ({ children, className = "", spotlightColor = "rgba(255, 2
   );
 };
 
-const GreetingComponent = () => {
+const GreetingComponent = ({name}) => {
   const [greeting, setGreeting] = useState('');
   const [icon, setIcon] = useState(null);
-  const [username, setUsername] = useState('there');
+  const [username, setUsername] = useState(
+    name ? name.charAt(0).toUpperCase() + name.slice(1) : "Dear User"
+  );
   
   useEffect(() => {
     try {
@@ -62,7 +64,7 @@ const GreetingComponent = () => {
   }, []);
 
   return (
-    <div className="container mx-auto px-4 mt-4">
+    <div className="container cursor-pointer mx-auto px-4 mt-4">
       <SpotlightCard 
         className="bg-white rounded-lg shadow-md border border-gray-100"
         spotlightColor="rgba(255, 223, 186, 0.2)" 

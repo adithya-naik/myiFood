@@ -13,6 +13,11 @@ import "aos/dist/aos.css";
 import { Toaster } from "react-hot-toast";
 import ScrollToTop from "./components/ScrollToTop";
 import Profile from "./components/Profile";
+import CookiePolicy from "./components/CookiePolicy"
+import TermsOfService from "./components/TermsOfService"
+import PrivacyPolicy from "./components/PrivacyPolicy"
+
+
 function App() {
   useEffect(() => {
     AOS.init({
@@ -48,6 +53,9 @@ function App() {
           <Route path="/orders" element={<MyOrders />} />
           <Route path="/notifications" element={<Notifications />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms-of-service" element={<TermsOfService />} />
+          <Route path="/cookie-policy" element={<CookiePolicy />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>

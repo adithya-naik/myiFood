@@ -205,7 +205,7 @@ const MyOrders = () => {
               Order Statistics
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 cursor-pointer md:grid-cols-4 gap-4">
               <div className="bg-green-50 p-4 rounded-lg">
                 <p className="text-sm text-gray-500">Total Spent</p>
                 <p className="text-xl font-bold text-green-600 flex items-center">
@@ -267,8 +267,8 @@ const MyOrders = () => {
               <PackageCheck className="w-5 h-5 text-green-500" />
               Orders List
             </h2>
-          <div className="space-y-6">
-            {orders.map((order, index) => {
+          <div className="space-y-6 cursor-pointer">
+            {[...orders].reverse().map((order, index) => {
               const orderDate = new Date(order.orderDate);
               const isValidDate = !isNaN(orderDate.getTime());
 
