@@ -42,7 +42,7 @@ const Cart = () => {
     let email = localStorage.getItem("email")
     console.log("credentials : ",email)
 
-    const response = await fetch("http://localhost:3000/api/orderData", {
+    const response = await fetch("https://myifoodb.onrender.com/api/orderData", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

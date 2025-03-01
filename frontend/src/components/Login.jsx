@@ -25,7 +25,7 @@ const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:3000/api/loginUser", {
+      const response = await fetch("https://myifoodb.onrender.com/api/loginUser", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

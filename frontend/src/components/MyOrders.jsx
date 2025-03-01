@@ -63,7 +63,7 @@ const MyOrders = () => {
 
     const fetchOrders = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/fetchOrders", {
+        const response = await fetch("https://myifoodb.onrender.com/api/fetchOrders", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
