@@ -12,6 +12,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import { Toaster } from "react-hot-toast";
 import ScrollToTop from "./components/ScrollToTop";
+import Profile from "./components/Profile";
 function App() {
   useEffect(() => {
     AOS.init({
@@ -42,6 +43,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/createuser" element={<SignUp />} />
           <Route path="/orders" element={<MyOrders />} />
           <Route path="/notifications" element={<Notifications />} />

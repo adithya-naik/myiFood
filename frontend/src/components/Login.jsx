@@ -56,6 +56,8 @@ const navigate = useNavigate();
     }
   };
 
+  // console.log("Email : ",credentials.email)
+
   return (
     
     <div>
