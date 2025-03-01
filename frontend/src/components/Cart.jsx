@@ -5,6 +5,7 @@ import { FaRupeeSign } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
 import { motion } from 'framer-motion';
+import Footer from './Footer';
 
 import { FaShoppingCart } from "react-icons/fa";
 import { toast } from 'react-hot-toast';
@@ -110,6 +111,7 @@ const Cart = () => {
             </Link>
           </div>
         </motion.div>
+        <Footer></Footer>
       </>
     );
   }
@@ -250,6 +252,8 @@ const Cart = () => {
           </motion.div>
         </div>
       </div>
+      
+      <Footer/>
     </>
   );
 };

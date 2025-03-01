@@ -338,7 +338,7 @@ const NotificationsPage = () => {
 
         {/* Footer CTA */}
         {notifications.length > 0 && (
-          <div className="mt-6 sticky bottom-4">
+          <div className="mt-6  bottom-4">
             <button className="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-3 px-4 rounded-lg shadow-lg transition-colors duration-200 flex items-center justify-center">
               <Bell className="h-5 w-5 mr-2" />
               Turn On Notification Alerts
