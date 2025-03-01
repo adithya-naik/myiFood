@@ -52,4 +52,4 @@ const Footer = () => {
   );
 };
 
-export default Footer;appa
+export default Footer;
