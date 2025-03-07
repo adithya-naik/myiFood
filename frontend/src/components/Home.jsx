@@ -25,19 +25,6 @@ import FoodCard from "./FoodCard";
 import Loading from "./Loading";
 import GreetingComponent from "./GreetingComponent";
 
-// Move cache to a separate module to ensure it persists across navigation
-// In a new file named 'dataCache.js':
-// export const dataCache = {
-//   categories: null,
-//   items: null,
-//   lastFetch: {
-//     categories: 0,
-//     items: 0
-//   }
-// };
-// export const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
-
-// Import the cache from the separate module
 import { dataCache, CACHE_DURATION } from "./dataCache";
 
 const Home = () => {

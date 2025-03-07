@@ -5,235 +5,118 @@ import { toast } from 'react-hot-toast';
 const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
-  // State for cart items and total
+  // State variables
   const [items, setItems] = useState([]);
   const [total, setTotal] = useState(0);
-  const [isInitialized, setIsInitialized] = useState(false);
-  
-  // Get user email - extracted as a function to ensure consistent usage
+
+  // Helper Functions
   const getUserEmail = () => {
-    // First try to get email directly from localStorage
     const email = localStorage.getItem('email');
-    
-    // If no direct email, try to get from credentials object
-    if (!email) {
-      try {
-        const credentials = localStorage.getItem('credentials');
-        if (credentials) {
-          const parsedCredentials = JSON.parse(credentials);
-          return parsedCredentials.email;
-        }
-      } catch (error) {
-        console.error('Error parsing credentials:', error);
-      }
+    if (email) return email;
+    try {
+      const credentials = JSON.parse(localStorage.getItem('credentials'));
+      return credentials?.email || null;
+    } catch (error) {
+      console.error('Error parsing credentials:', error);
+      return null;
     }
-    
-    return email;
   };
-  
-  // Get cart key based on user email
+
   const getCartKey = () => {
     const email = getUserEmail();
     return email ? `foodCart_${email}` : null;
   };
-  
-  // Check if user is authenticated
+
   const isAuthenticated = () => {
     return !!localStorage.getItem('authToken') || !!getUserEmail();
   };
-  
-  // Load cart data from localStorage on initial render
-  useEffect(() => {
-    const loadCart = () => {
-      try {
-        if (isAuthenticated()) {
-          const cartKey = getCartKey();
-          
-          if (cartKey) {
-            const savedCart = localStorage.getItem(cartKey);
-            
-            if (savedCart) {
-              const parsedCart = JSON.parse(savedCart);
-              setItems(parsedCart.items || []);
-              
-              // Recalculate total in case there's any inconsistency
-              const calculatedTotal = (parsedCart.items || []).reduce(
-                (sum, item) => sum + (item.price * item.quantity),
-                0
-              );
-              
-              setTotal(calculatedTotal);
-              console.log('Cart loaded successfully:', parsedCart);
-            } else {
-              console.log('No saved cart found for key:', cartKey);
-              setItems([]);
-              setTotal(0);
-            }
-          } else {
-            console.log('No cart key could be generated');
-            setItems([]);
-            setTotal(0);
-          }
-        } else {
-          console.log('User not authenticated, empty cart');
-          setItems([]);
-          setTotal(0);
-        }
-      } catch (error) {
-        console.error('Error loading cart:', error);
-        setItems([]);
-        setTotal(0);
-      }
-      
-      setIsInitialized(true);
-    };
-    
-    // Load cart immediately when component mounts
-    loadCart();
-    
-    // Add event listener for storage changes
-    const handleStorageChange = (e) => {
+
+  // Load cart data from localStorage
+  const loadCart = () => {
+    if (isAuthenticated()) {
       const cartKey = getCartKey();
-      if (cartKey && e.key === cartKey) {
-        loadCart();
-      }
-      
-      // Also reload if auth status changes
-      if (e.key === 'authToken' || e.key === 'email' || e.key === 'credentials') {
-        loadCart();
-      }
-    };
-    
-    window.addEventListener('storage', handleStorageChange);
-    
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-    };
-  }, []);
-  
-  // Save cart to localStorage whenever items change
-  useEffect(() => {
-    // Only save after initial loading is complete to prevent overwriting
-    if (!isInitialized) return;
-    
-    const saveCart = () => {
-      try {
-        if (isAuthenticated()) {
-          const cartKey = getCartKey();
-          
-          if (cartKey) {
-            const cartData = {
-              items,
-              total
-            };
-            
-            localStorage.setItem(cartKey, JSON.stringify(cartData));
-            console.log('Cart saved successfully to', cartKey, cartData);
-          } else {
-            console.error('Cannot save cart: No valid cart key');
-          }
-        } else {
-          console.log('User not authenticated, cart not saved');
+      if (cartKey) {
+        const savedCart = localStorage.getItem(cartKey);
+        if (savedCart) {
+          const cartData = JSON.parse(savedCart);
+          setItems(cartData.items || []);
+          setTotal(cartData.items?.reduce((sum, item) => sum + item.price * item.quantity, 0) || 0);
         }
-      } catch (error) {
-        console.error('Error saving cart:', error);
       }
-    };
-    
-    saveCart();
-  }, [items, total, isInitialized]);
-  
-  // Recalculate total whenever items change
+    }
+  };
+
+  // Save cart to localStorage
+  const saveCart = () => {
+    if (isAuthenticated()) {
+      const cartKey = getCartKey();
+      if (cartKey) {
+        localStorage.setItem(cartKey, JSON.stringify({ items, total }));
+      }
+    }
+  };
+
+  // Load cart when the component mounts
   useEffect(() => {
-    const newTotal = items.reduce(
-      (sum, item) => sum + (item.price * item.quantity),
-      0
-    );
-    setTotal(newTotal);
+    loadCart();
+  }, []);
+
+  // Save cart whenever items change
+  useEffect(() => {
+    saveCart();
+    setTotal(items.reduce((sum, item) => sum + item.price * item.quantity, 0));
   }, [items]);
-  
-  // Add item to cart
-  const addToCart = async (item) => {
+
+  // Cart Actions
+  const addToCart = (item) => {
     if (!isAuthenticated()) {
-      toast.error('Please login to add items to cart', {
-        duration: 2000,
-        icon: '🔒',
-      });
+      toast.error('Please login to add items to cart', { duration: 2000, icon: '🔒' });
       return;
     }
-    
-    setItems(prevItems => {
-      const existingItemIndex = prevItems.findIndex(
-        i => i.id === item.id && i.size === item.size
-      );
-      
-      if (existingItemIndex > -1) {
-        // Item exists, update quantity
-        return prevItems.map((i, index) => {
-          if (index === existingItemIndex) {
-            return {
-              ...i,
-              quantity: Math.min(5, i.quantity + item.quantity)
-            };
-          }
-          return i;
-        });
-      } else {
-        // Add new item
-        return [...prevItems, item];
-      }
-    });
-  };
-  
-  // Remove item from cart
-  const removeFromCart = (id, size) => {
-    setItems(prevItems => 
-      prevItems.filter(item => !(item.id === id && item.size === size))
-    );
-  };
-  
-  // Update item quantity
-  const updateQuantity = (id, size, quantity) => {
-    setItems(prevItems => 
-      prevItems.map(item => {
-        if (item.id === id && item.size === size) {
-          return {
-            ...item,
-            quantity: Math.min(5, Math.max(1, quantity))
-          };
+
+    const existingItem = items.find(i => i.id === item.id && i.size === item.size);
+    if (existingItem) {
+      const updatedItems = items.map(i => {
+        if (i.id === item.id && i.size === item.size) {
+          return { ...i, quantity: Math.min(5, i.quantity + item.quantity) };
         }
-        return item;
-      })
-    );
+        return i;
+      });
+      setItems(updatedItems);
+    } else {
+      setItems([...items, item]);
+    }
   };
-  
-  // Clear cart
+
+  const removeFromCart = (id, size) => {
+    setItems(items.filter(item => !(item.id === id && item.size === size)));
+  };
+
+  const updateQuantity = (id, size, quantity) => {
+    setItems(items.map(item => {
+      if (item.id === id && item.size === size) {
+        return { ...item, quantity: Math.min(5, Math.max(1, quantity)) };
+      }
+      return item;
+    }));
+  };
+
   const clearCart = () => {
     setItems([]);
     setTotal(0);
-    
     try {
-      const cartKey = getCartKey();
-      if (cartKey) {
-        localStorage.removeItem(cartKey);
-        console.log('Cart cleared from localStorage:', cartKey);
-      }
+      localStorage.removeItem(getCartKey());
     } catch (error) {
       console.error('Error clearing cart:', error);
     }
   };
-  
-  // Context value
-  const value = {
-    items,
-    total,
-    addToCart,
-    removeFromCart,
-    updateQuantity,
-    clearCart,
-  };
-  
-  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
+
+  // Provide Context
+  return (
+    <CartContext.Provider value={{ items, total, addToCart, removeFromCart, updateQuantity, clearCart }}>
+      {children}
+    </CartContext.Provider>
+  );
 };
 
 // Custom hook to use cart context
