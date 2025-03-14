@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { CiLogin } from "react-icons/ci";
 import { motion } from 'framer-motion';
 import { toast } from 'react-hot-toast';
-
+import { useNavigate } from "react-router-dom";
 const SignUp = () => {
   const [credentials, setCredentials] = useState({
     name: "",
@@ -12,6 +12,7 @@ const SignUp = () => {
     geolocation: "",
   });
 
+  const navigate = useNavigate();
   const onchange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
   };
